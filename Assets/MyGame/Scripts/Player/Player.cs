@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    private Animator animator;
     private Rigidbody2D rb;
 
     private float movement;
@@ -18,6 +19,7 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
     }
 
@@ -33,7 +35,23 @@ public class Player : MonoBehaviour
             {
                 jump();
                 isGrounded = false;
+                animator.SetBool("Jump", true);
             }
+
+        }
+
+        if (Mathf.Abs(movement) > 0.1f)
+        {
+            animator.SetFloat("Run", 1f);
+        }
+        else if (movement < 0.1f)
+        {
+            animator.SetFloat("Run", 0f);
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            animator.SetTrigger("Attack");
         }
     }
 
@@ -67,6 +85,7 @@ public class Player : MonoBehaviour
         if (collision.gameObject.tag == "Ground")
         {
             isGrounded = true;
+            animator.SetBool("Jump", false);
         }
     }
 
