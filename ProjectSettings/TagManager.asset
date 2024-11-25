@@ -39,6 +39,27 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: BG3
+    uniqueID: 1404595643
+    locked: 0
+  - name: BG2
+    uniqueID: 3920201361
+    locked: 0
+  - name: BG1
+    uniqueID: 554358019
+    locked: 0
+  - name: Water
+    uniqueID: 906834643
+    locked: 0
+  - name: Ground
+    uniqueID: 646871363
+    locked: 0
+  - name: Stuff
+    uniqueID: 2161629125
+    locked: 0
+  - name: Grass
+    uniqueID: 3122477681
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
