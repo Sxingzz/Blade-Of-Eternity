@@ -57,6 +57,9 @@ TagManager:
   - name: Stuff
     uniqueID: 2161629125
     locked: 0
+  - name: Player
+    uniqueID: 2557229941
+    locked: 0
   - name: Grass
     uniqueID: 3122477681
     locked: 0
