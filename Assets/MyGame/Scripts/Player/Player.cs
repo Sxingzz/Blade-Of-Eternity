@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -12,10 +13,20 @@ public class Player : MonoBehaviour
     private bool facingRight = true;
     private bool isGrounded = true;
 
+    public int maxHealth = 10;
+    public int currentCoint = 0;
+
+    [SerializeField] private Text health;
+    [SerializeField] private Text coin;
+    [SerializeField] private Transform attackPoint;
+
+
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float jumpForce = 12f;
+    [SerializeField] private float attackRadius = 2f;
+    [SerializeField] private LayerMask attacklayer;
     [SerializeField] private int maxJumps = 2;
-
+   
 
     private void Start()
     {
@@ -25,6 +36,14 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        if (maxHealth <= 0)
+        {
+            Die();
+        }
+
+        health.text = maxHealth.ToString();
+        coin.text = currentCoint.ToString();
+
         movement = Input.GetAxis("Horizontal");
 
         FlipPlayer();
@@ -89,6 +108,56 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void PlayerAttack()
+    {
+        Collider2D collInfo = Physics2D.OverlapCircle(attackPoint.position, 
+                                                        attackRadius, attacklayer);
 
+        if (collInfo)
+        {
+            if (collInfo.gameObject.GetComponent<PatrolEnemy>() != null)
+            {
+                collInfo.gameObject.GetComponent<PatrolEnemy>().EnemyTakeDamage(1);
+            }
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (attackPoint == null)
+        {
+            return;
+        }
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(attackPoint.position, attackRadius);
+    }
+
+    public void TakeDamage(int damage)
+    {
+        if (maxHealth <= 0)
+        {
+            return;
+        }
+        maxHealth -= damage;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Coin")
+        {
+            currentCoint++;
+            collision.gameObject.transform.GetChild(0).GetComponent<Animator>()
+                                                        .SetTrigger("Collected");
+            Destroy(collision.gameObject, 0.5f);
+        }
+    }
+
+    private void Die()
+    {
+        Debug.Log("Die");
+        FindObjectOfType<GameManager>().isGameActive = false;
+        Destroy(this.gameObject);
+    }
 
 }

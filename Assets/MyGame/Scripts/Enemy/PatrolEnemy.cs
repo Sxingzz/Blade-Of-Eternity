@@ -22,6 +22,7 @@ public class PatrolEnemy : MonoBehaviour
     public float retrieveDistance = 2.5f;
     public float chaseSpeed = 4f;
     public float attackRadius = 1f;
+    public int EnemyMaxHealth = 10;
 
     private void Start()
     {
@@ -30,6 +31,16 @@ public class PatrolEnemy : MonoBehaviour
 
     private void Update()
     {
+        if (FindObjectOfType<GameManager>().isGameActive == false)
+        {
+            return;
+        }
+
+        if (EnemyMaxHealth <= 0)
+        {
+            EnemyDied();
+        }
+
         if (Vector2.Distance(transform.position, player.position) <= attackRange)
         {
             inRange = true;
@@ -96,15 +107,34 @@ public class PatrolEnemy : MonoBehaviour
         }
     }
 
-    private void Attack()
+    private void EnemyAttack()
     {
         Collider2D collInfo = Physics2D.OverlapCircle(AttackPoint.position, 
                                                             attackRadius, attacklayer);
         
         if (collInfo)
         {
-            Debug.Log(collInfo.name);
+            if (collInfo.gameObject.GetComponent<Player>() != null)
+            {
+                collInfo.gameObject.GetComponent<Player>().TakeDamage(1);
+            }
         }
+    }
+
+    public void EnemyTakeDamage(int damage)
+    {
+        if (EnemyMaxHealth <= 0)
+        {
+            return;
+        }
+
+        EnemyMaxHealth -= damage;
+    }
+
+    public void EnemyDied()
+    {
+        Debug.Log("EnemyDied");
+        Destroy(this.gameObject);
     }
 
     private void OnDrawGizmosSelected()
