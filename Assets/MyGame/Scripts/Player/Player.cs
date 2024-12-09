@@ -151,6 +151,11 @@ public class Player : MonoBehaviour
                                                         .SetTrigger("Collected");
             Destroy(collision.gameObject, 0.5f);
         }
+
+        if (collision.gameObject.tag == "VictoryPoint")
+        {
+            FindObjectOfType<SceneManagement>().LoadScene();
+        }
     }
 
     private void Die()
